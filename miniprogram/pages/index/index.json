@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "weather-strip": "../../components/weather-strip/weather-strip",
+    "calendar": "../../components/calendar/calendar",
+    "event-card": "../../components/event-card/event-card",
+    "paste-modal": "../../components/paste-modal/paste-modal"
+  }
+}

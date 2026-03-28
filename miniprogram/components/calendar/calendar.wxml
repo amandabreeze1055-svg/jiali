@@ -1,0 +1,37 @@
+<view class="calendar-card">
+  <view class="calendar-header">
+    <text class="calendar-title">{{month + 1}}月 {{year}}</text>
+    <view class="calendar-nav">
+      <view class="nav-btn" bindtap="prevMonth">
+        <text>←</text>
+      </view>
+      <view class="nav-btn" bindtap="nextMonth">
+        <text>→</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="weekday-row">
+    <text wx:for="{{weekdays}}" wx:key="*this" class="weekday-cell">{{item}}</text>
+  </view>
+
+  <view class="days-grid">
+    <view
+      wx:for="{{grid}}"
+      wx:key="date"
+      class="day-cell {{item.currentMonth ? '' : 'other-month'}} {{item.isToday ? 'today' : ''}} {{item.date === selectedDate ? 'selected' : ''}}"
+      bindtap="onDayTap"
+      data-date="{{item.date}}"
+    >
+      <text class="day-num">{{item.day}}</text>
+      <view class="dot-row" wx:if="{{item.dots.length > 0}}">
+        <view
+          wx:for="{{item.dots}}"
+          wx:for-item="dot"
+          wx:key="*this"
+          class="dot dot-{{dot}}"
+        ></view>
+      </view>
+    </view>
+  </view>
+</view>

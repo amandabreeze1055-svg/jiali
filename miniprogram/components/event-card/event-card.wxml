@@ -1,0 +1,110 @@
+<view class="event-card {{editing ? 'editing' : ''}} {{event.time_uncertain ? 'uncertain' : ''}}" bindtap="toggleEdit">
+  <!-- Left color bar -->
+  <view class="color-bar bar-{{event.category}}"></view>
+
+  <view class="card-body">
+    <!-- View mode -->
+    <view class="view-mode" wx:if="{{!editing}}">
+      <view class="card-header">
+        <text class="card-title">{{event.title}}</text>
+        <view class="time-badge" wx:if="{{event.time}}">
+          <text>{{event.time}}{{event.end_time ? ' - ' + event.end_time : ''}}</text>
+        </view>
+      </view>
+
+      <text class="card-notes" wx:if="{{event.notes}}">{{event.notes}}</text>
+
+      <view class="card-location" wx:if="{{event.location}}">
+        <text class="location-text">📍 {{event.location}}</text>
+      </view>
+
+      <!-- Prep items checklist -->
+      <view class="prep-list" wx:if="{{event.prep_items.length > 0}}">
+        <view
+          class="prep-item"
+          wx:for="{{event.prep_items}}"
+          wx:key="*this"
+          catchtap="togglePrepItem"
+          data-index="{{index}}"
+        >
+          <view class="checkbox {{checkedItems[index] ? 'checked' : ''}}">
+            <text wx:if="{{checkedItems[index]}}">✓</text>
+          </view>
+          <text class="prep-text {{checkedItems[index] ? 'prep-done' : ''}}">{{item}}</text>
+        </view>
+      </view>
+
+      <!-- Time uncertain warning -->
+      <view class="uncertain-warn" wx:if="{{event.time_uncertain}}">
+        <text>⚠️ 此日期由相对时间推算，请确认</text>
+      </view>
+
+      <!-- Category tag -->
+      <view class="tag-row">
+        <view class="category-tag tag-{{event.category}}">
+          <text>{{categoryLabel}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Edit mode -->
+    <view class="edit-mode" wx:if="{{editing}}" catchtap="stopPropagation">
+      <view class="edit-field">
+        <text class="edit-label">标题</text>
+        <input class="edit-input" value="{{editData.title}}" bindinput="onEditTitle" />
+      </view>
+
+      <view class="edit-row">
+        <view class="edit-field half">
+          <text class="edit-label">日期</text>
+          <picker mode="date" value="{{editData.date}}" bindchange="onEditDate">
+            <view class="edit-picker">{{editData.date}}</view>
+          </picker>
+        </view>
+        <view class="edit-field half">
+          <text class="edit-label">时间</text>
+          <picker mode="time" value="{{editData.time || ''}}" bindchange="onEditTime">
+            <view class="edit-picker">{{editData.time || '未设置'}}</view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="edit-field">
+        <text class="edit-label">地点</text>
+        <input class="edit-input" value="{{editData.location || ''}}" bindinput="onEditLocation" placeholder="选填" placeholder-style="color: #B5B5B5;" />
+      </view>
+
+      <view class="edit-field">
+        <text class="edit-label">备注</text>
+        <textarea class="edit-textarea" value="{{editData.notes || ''}}" bindinput="onEditNotes" placeholder="选填" placeholder-style="color: #B5B5B5;" auto-height />
+      </view>
+
+      <view class="edit-field">
+        <text class="edit-label">分类</text>
+        <view class="category-picker">
+          <view
+            wx:for="{{categories}}"
+            wx:key="value"
+            class="cat-option tag-{{item.value}} {{editData.category === item.value ? 'cat-active' : ''}}"
+            catchtap="onEditCategory"
+            data-value="{{item.value}}"
+          >
+            <text>{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="edit-actions">
+        <view class="btn-cancel" catchtap="cancelEdit">
+          <text>取消</text>
+        </view>
+        <view class="btn-delete" catchtap="deleteEvent">
+          <text>删除</text>
+        </view>
+        <view class="btn-save" catchtap="saveEdit">
+          <text>保存</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,34 @@
+page {
+  background: #FAFAF8;
+  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: #1A1A1A;
+  font-size: 30rpx;
+  line-height: 1.5;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+button {
+  background: initial;
+}
+
+button:focus {
+  outline: 0;
+}
+
+button::after {
+  border: none;
+}
+
+/* Shadow utilities */
+.shadow-s {
+  box-shadow: 0 2rpx 6rpx rgba(0,0,0,0.04);
+}
+
+.shadow-m {
+  box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.06);
+}

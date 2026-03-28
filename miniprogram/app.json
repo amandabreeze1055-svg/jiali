@@ -1,0 +1,47 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/todo/todo",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundColor": "#FAFAF8",
+    "backgroundColorTop": "#FAFAF8",
+    "backgroundColorBottom": "#FAFAF8"
+  },
+  "tabBar": {
+    "color": "#B5B5B5",
+    "selectedColor": "#1A1A1A",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "日历",
+        "iconPath": "images/tab-calendar.png",
+        "selectedIconPath": "images/tab-calendar-active.png"
+      },
+      {
+        "pagePath": "pages/todo/todo",
+        "text": "待办",
+        "iconPath": "images/tab-todo.png",
+        "selectedIconPath": "images/tab-todo-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/tab-profile.png",
+        "selectedIconPath": "images/tab-profile-active.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于获取当地天气信息"
+    }
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}

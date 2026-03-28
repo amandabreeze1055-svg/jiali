@@ -1,0 +1,71 @@
+<view class="modal-mask" wx:if="{{visible}}" bindtap="onClose">
+  <view class="modal-content" catchtap="stopPropagation">
+    <view class="modal-handle"></view>
+    <text class="modal-title">添加日程</text>
+    <text class="modal-subtitle">从聊天记录或照片中识别日程</text>
+
+    <!-- Tab switcher -->
+    <view class="tab-container">
+      <view class="tab-item {{activeTab === 'paste' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="paste">
+        <text>粘贴文字</text>
+      </view>
+      <view class="tab-item {{activeTab === 'photo' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="photo">
+        <text>拍照识别</text>
+      </view>
+    </view>
+
+    <!-- Paste panel -->
+    <view class="panel" wx:if="{{activeTab === 'paste' && !showResult}}">
+      <view class="paste-area">
+        <textarea
+          class="paste-input"
+          placeholder="粘贴微信聊天记录、学校通知等文字内容..."
+          placeholder-style="color: #B5B5B5; font-size: 26rpx;"
+          value="{{pasteText}}"
+          bindinput="onPasteInput"
+          auto-height
+          maxlength="-1"
+        />
+      </view>
+      <view class="action-btn {{pasteText ? 'btn-active' : ''}}" bindtap="parseText">
+        <text wx:if="{{!loading}}">识别日程</text>
+        <text wx:if="{{loading}}">正在识别中...</text>
+      </view>
+    </view>
+
+    <!-- Photo panel -->
+    <view class="panel" wx:if="{{activeTab === 'photo' && !showResult}}">
+      <view class="photo-area" bindtap="choosePhoto">
+        <view class="photo-placeholder" wx:if="{{photos.length === 0}}">
+          <text class="photo-icon">📷</text>
+          <text class="photo-hint">点击拍照或从相册选择</text>
+        </view>
+        <view class="photo-grid" wx:if="{{photos.length > 0}}">
+          <image
+            wx:for="{{photos}}"
+            wx:key="*this"
+            src="{{item}}"
+            class="photo-thumb"
+            mode="aspectFill"
+          />
+          <view class="photo-add" wx:if="{{photos.length < 4}}">
+            <text>+</text>
+          </view>
+        </view>
+      </view>
+      <view class="action-btn {{photos.length > 0 ? 'btn-active' : ''}}" bindtap="parsePhoto">
+        <text wx:if="{{!loading}}">识别日程</text>
+        <text wx:if="{{loading}}">正在识别中...</text>
+      </view>
+    </view>
+
+    <!-- Parse result -->
+    <view class="panel" wx:if="{{showResult}}">
+      <parsed-preview
+        result="{{parseResult}}"
+        bind:confirm="onConfirmAdd"
+        bind:back="onBackToInput"
+      />
+    </view>
+  </view>
+</view>

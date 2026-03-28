@@ -1,0 +1,83 @@
+.weather-card {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  border: 1rpx solid #F0EFED;
+  padding: 20rpx 32rpx;
+  margin: 0 40rpx 16rpx;
+  display: flex;
+  align-items: center;
+  height: 104rpx;
+  box-sizing: border-box;
+}
+
+.weather-today {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.weather-icon-lg {
+  font-size: 44rpx;
+  margin-right: 16rpx;
+}
+
+.weather-today-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.weather-temp {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1A1A1A;
+  line-height: 1.1;
+}
+
+.weather-range {
+  font-size: 20rpx;
+  color: #B5B5B5;
+  line-height: 1.2;
+}
+
+.weather-city {
+  font-size: 20rpx;
+  color: #8C8C8C;
+  line-height: 1.2;
+}
+
+.weather-divider {
+  width: 1rpx;
+  height: 60rpx;
+  background: #F0EFED;
+  margin: 0 24rpx;
+  flex-shrink: 0;
+}
+
+.weather-forecast {
+  display: flex;
+  flex: 1;
+  justify-content: space-around;
+}
+
+.forecast-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.forecast-weekday {
+  font-size: 20rpx;
+  color: #B5B5B5;
+  line-height: 1.3;
+}
+
+.forecast-icon {
+  font-size: 28rpx;
+  line-height: 1.3;
+}
+
+.forecast-temp {
+  font-size: 20rpx;
+  color: #8C8C8C;
+  line-height: 1.3;
+}

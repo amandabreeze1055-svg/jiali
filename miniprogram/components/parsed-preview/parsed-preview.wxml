@@ -1,0 +1,68 @@
+<view class="preview-container">
+  <!-- Summary -->
+  <view class="preview-summary">
+    <text class="summary-text">{{result.summary}}</text>
+  </view>
+
+  <!-- Schedule cards (weekly timetable) -->
+  <view class="schedule-card" wx:for="{{result.schedules}}" wx:key="title">
+    <text class="schedule-title">📅 {{item.title}}</text>
+    <text class="schedule-range">{{item.date_range}}</text>
+    <view class="schedule-grid">
+      <view class="schedule-day" wx:for="{{item.days}}" wx:for-item="day" wx:key="weekday">
+        <text class="sday-label">{{day.weekday}}</text>
+        <text class="sday-uniform" wx:if="{{day.uniform}}">👔 {{day.uniform}}</text>
+        <view class="sday-items" wx:if="{{day.items.length > 0}}">
+          <text class="sday-item" wx:for="{{day.items}}" wx:for-item="si" wx:key="*this">{{si}}</text>
+        </view>
+        <view class="sday-highlights" wx:if="{{day.highlights.length > 0}}">
+          <text class="sday-hl" wx:for="{{day.highlights}}" wx:for-item="hl" wx:key="*this">{{hl}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Event cards -->
+  <view class="preview-section" wx:if="{{result.events.length > 0}}">
+    <text class="section-label">事项</text>
+    <view
+      class="preview-event {{item.time_uncertain ? 'event-uncertain' : ''}} {{item.info_only ? 'event-info-only' : ''}}"
+      wx:for="{{result.events}}"
+      wx:key="title"
+    >
+      <view class="pe-header">
+        <view class="pe-bar bar-{{item.category}}"></view>
+        <text class="pe-title">{{item.title}}</text>
+        <view class="pe-time" wx:if="{{item.time}}">
+          <text>{{item.time}}</text>
+        </view>
+      </view>
+      <text class="pe-date">{{item.date}} {{item.time_uncertain ? '⚠️ 时间待确认' : ''}}</text>
+      <text class="pe-notes" wx:if="{{item.notes}}">{{item.notes}}</text>
+      <view class="pe-prep" wx:if="{{item.prep_items.length > 0}}">
+        <text class="pe-prep-item" wx:for="{{item.prep_items}}" wx:for-item="pi" wx:key="*this">• {{pi}}</text>
+      </view>
+      <view class="pe-info-badge" wx:if="{{item.info_only}}">
+        <text>仅记录</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Info notes -->
+  <view class="preview-section" wx:if="{{result.info_notes.length > 0}}">
+    <text class="section-label">信息记录</text>
+    <view class="info-note" wx:for="{{result.info_notes}}" wx:key="content">
+      <text>📝 {{item.content}}</text>
+    </view>
+  </view>
+
+  <!-- Action buttons -->
+  <view class="preview-actions">
+    <view class="btn-back" bindtap="goBack">
+      <text>返回修改</text>
+    </view>
+    <view class="btn-confirm" bindtap="confirmAdd">
+      <text>确认添加到日历</text>
+    </view>
+  </view>
+</view>

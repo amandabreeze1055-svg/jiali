@@ -1,0 +1,128 @@
+.calendar-card {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  border: 1rpx solid #F0EFED;
+  padding: 28rpx 32rpx;
+  margin: 0 40rpx;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.calendar-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1A1A1A;
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+}
+
+.nav-btn {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16rpx;
+}
+
+.nav-btn:active {
+  background: #F0EFED;
+}
+
+.nav-btn text {
+  font-size: 32rpx;
+  color: #8C8C8C;
+}
+
+.weekday-row {
+  display: flex;
+  margin-bottom: 8rpx;
+}
+
+.weekday-cell {
+  flex: 1;
+  text-align: center;
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #B5B5B5;
+  padding: 8rpx 0;
+}
+
+.days-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.day-cell {
+  width: 14.2857%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8rpx 0;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.day-num {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #1A1A1A;
+  width: 64rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  text-align: center;
+  border-radius: 18rpx;
+}
+
+.other-month .day-num {
+  opacity: 0.35;
+}
+
+.today .day-num {
+  background: #1A1A1A;
+  color: #FFFFFF;
+}
+
+.selected:not(.today) .day-num {
+  background: rgba(74, 144, 217, 0.1);
+  color: #4A90D9;
+}
+
+.dot-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 4rpx;
+  height: 10rpx;
+}
+
+.dot {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  margin: 0 3rpx;
+}
+
+.dot-school {
+  background: #4A90D9;
+}
+
+.dot-training {
+  background: #5BB784;
+}
+
+.dot-medical {
+  background: #E8856C;
+}
+
+.dot-family {
+  background: #E8B44C;
+}

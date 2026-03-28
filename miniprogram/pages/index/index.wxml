@@ -1,0 +1,94 @@
+<view class="page">
+  <!-- Custom navigation bar -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-content">
+      <view class="nav-left">
+        <text class="brand-name">家历</text>
+        <text class="nav-date">{{currentYearMonth}}</text>
+      </view>
+      <view class="nav-right">
+        <view class="search-btn" bindtap="onSearch">
+          <text>🔍</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="scroll-area" style="top: {{navHeight}}px;">
+    <!-- Weather strip -->
+    <view class="section-gap"></view>
+    <weather-strip weather="{{weather}}" />
+
+    <!-- Calendar -->
+    <calendar
+      events="{{events}}"
+      selectedDate="{{selectedDate}}"
+      bind:dayselect="onDaySelect"
+    />
+
+    <!-- Upcoming events -->
+    <view class="events-section">
+      <view class="events-header">
+        <text class="events-title">近期事项</text>
+        <view class="legend">
+          <view class="legend-item">
+            <view class="legend-dot dot-school"></view>
+            <text>学校</text>
+          </view>
+          <view class="legend-item">
+            <view class="legend-dot dot-training"></view>
+            <text>培训</text>
+          </view>
+          <view class="legend-item">
+            <view class="legend-dot dot-medical"></view>
+            <text>医疗</text>
+          </view>
+          <view class="legend-item">
+            <view class="legend-dot dot-family"></view>
+            <text>家庭</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- Grouped by date -->
+      <view class="date-group" wx:for="{{groupedEvents}}" wx:key="date">
+        <view class="date-label-row">
+          <text class="date-label">{{item.label}}</text>
+          <view class="relative-badge" wx:if="{{item.relative}}">
+            <text>{{item.relative}}</text>
+          </view>
+        </view>
+
+        <event-card
+          wx:for="{{item.events}}"
+          wx:for-item="evt"
+          wx:key="id"
+          event="{{evt}}"
+          bind:save="onEventSave"
+          bind:delete="onEventDelete"
+        />
+      </view>
+
+      <view class="empty-state" wx:if="{{groupedEvents.length === 0}}">
+        <text class="empty-icon">📋</text>
+        <text class="empty-text">暂无近期事项</text>
+        <text class="empty-hint">点击右下角按钮，粘贴聊天记录或拍照添加</text>
+      </view>
+    </view>
+
+    <!-- Bottom padding for FAB -->
+    <view style="height: 200rpx;"></view>
+  </scroll-view>
+
+  <!-- FAB button -->
+  <view class="fab" bindtap="showModal">
+    <text class="fab-icon">📋</text>
+  </view>
+
+  <!-- Paste modal -->
+  <paste-modal
+    visible="{{modalVisible}}"
+    bind:close="hideModal"
+    bind:addevents="onAddEvents"
+  />
+</view>

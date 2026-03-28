@@ -1,0 +1,67 @@
+<view class="page">
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-content">
+      <text class="page-title">待办事项</text>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="scroll-area" style="top: {{navHeight}}px;">
+    <!-- Filter tabs -->
+    <view class="filter-tabs">
+      <view class="filter-tab {{filter === 'pending' ? 'tab-active' : ''}}" bindtap="setFilter" data-filter="pending">
+        <text>待完成</text>
+        <view class="tab-count" wx:if="{{pendingCount > 0}}">
+          <text>{{pendingCount}}</text>
+        </view>
+      </view>
+      <view class="filter-tab {{filter === 'completed' ? 'tab-active' : ''}}" bindtap="setFilter" data-filter="completed">
+        <text>已完成</text>
+      </view>
+      <view class="filter-tab {{filter === 'all' ? 'tab-active' : ''}}" bindtap="setFilter" data-filter="all">
+        <text>全部</text>
+      </view>
+    </view>
+
+    <!-- Category filter -->
+    <view class="cat-filter">
+      <view class="cat-chip {{catFilter === '' ? 'chip-active' : ''}}" bindtap="setCatFilter" data-cat="">
+        <text>全部</text>
+      </view>
+      <view class="cat-chip chip-school {{catFilter === 'school' ? 'chip-active' : ''}}" bindtap="setCatFilter" data-cat="school">
+        <text>学校</text>
+      </view>
+      <view class="cat-chip chip-training {{catFilter === 'training' ? 'chip-active' : ''}}" bindtap="setCatFilter" data-cat="training">
+        <text>培训</text>
+      </view>
+      <view class="cat-chip chip-medical {{catFilter === 'medical' ? 'chip-active' : ''}}" bindtap="setCatFilter" data-cat="medical">
+        <text>医疗</text>
+      </view>
+      <view class="cat-chip chip-family {{catFilter === 'family' ? 'chip-active' : ''}}" bindtap="setCatFilter" data-cat="family">
+        <text>家庭</text>
+      </view>
+    </view>
+
+    <!-- Events list -->
+    <view class="events-list">
+      <view class="event-row" wx:for="{{filteredEvents}}" wx:key="id">
+        <view class="complete-btn {{item.completed ? 'completed' : ''}}" catchtap="toggleComplete" data-id="{{item.id}}">
+          <text wx:if="{{item.completed}}">✓</text>
+        </view>
+        <view class="event-main">
+          <event-card
+            event="{{item}}"
+            bind:save="onEventSave"
+            bind:delete="onEventDelete"
+          />
+        </view>
+      </view>
+
+      <view class="empty-state" wx:if="{{filteredEvents.length === 0}}">
+        <text class="empty-icon">✅</text>
+        <text class="empty-text">{{filter === 'completed' ? '还没有已完成的事项' : '暂无待办事项'}}</text>
+      </view>
+    </view>
+
+    <view style="height: 120rpx;"></view>
+  </scroll-view>
+</view>

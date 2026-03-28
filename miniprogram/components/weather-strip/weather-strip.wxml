@@ -1,0 +1,20 @@
+<view class="weather-card" wx:if="{{weather}}">
+  <view class="weather-today">
+    <text class="weather-icon-lg">{{weather.today.icon}}</text>
+    <view class="weather-today-info">
+      <text class="weather-temp">{{weather.today.tempHigh}}°</text>
+      <text class="weather-range">{{weather.today.tempLow}}°~{{weather.today.tempHigh}}°</text>
+      <text class="weather-city">{{weather.city}}</text>
+    </view>
+  </view>
+
+  <view class="weather-divider"></view>
+
+  <view class="weather-forecast">
+    <view class="forecast-day" wx:for="{{weather.forecast}}" wx:key="weekday">
+      <text class="forecast-weekday">{{item.weekday}}</text>
+      <text class="forecast-icon">{{item.icon}}</text>
+      <text class="forecast-temp">{{item.tempLow}}°/{{item.tempHigh}}°</text>
+    </view>
+  </view>
+</view>
