@@ -1,4 +1,4 @@
-const dateUtil = require('../../utils/date')
+const dateUtil = require('../../utils/date.js')
 
 Component({
   properties: {

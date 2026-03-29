@@ -18,8 +18,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16rpx 40rpx;
-  height: 88rpx;
+  padding: 0 40rpx;
 }
 
 .nav-left {
@@ -37,23 +36,6 @@
 .nav-date {
   font-size: 26rpx;
   color: #B5B5B5;
-}
-
-.search-btn {
-  width: 80rpx;
-  height: 80rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 20rpx;
-}
-
-.search-btn:active {
-  background: #F0EFED;
-}
-
-.search-btn text {
-  font-size: 36rpx;
 }
 
 /* Scroll area */
@@ -173,8 +155,6 @@
 /* FAB */
 .fab {
   position: fixed;
-  right: 48rpx;
-  bottom: 168rpx;
   width: 112rpx;
   height: 112rpx;
   background: #1A1A1A;
@@ -184,10 +164,6 @@
   justify-content: center;
   box-shadow: 0 8rpx 40rpx rgba(0, 0, 0, 0.2);
   z-index: 50;
-}
-
-.fab:active {
-  transform: scale(0.95);
 }
 
 .fab-icon {

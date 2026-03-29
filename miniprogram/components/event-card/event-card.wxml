@@ -1,108 +1,134 @@
-<view class="event-card {{editing ? 'editing' : ''}} {{event.time_uncertain ? 'uncertain' : ''}}" bindtap="toggleEdit">
-  <!-- Left color bar -->
-  <view class="color-bar bar-{{event.category}}"></view>
+<view class="swipe-container">
+  <!-- Delete action behind the card -->
+  <view class="swipe-action" catchtap="swipeDelete">
+    <text class="swipe-action-text">删除</text>
+  </view>
 
-  <view class="card-body">
-    <!-- View mode -->
-    <view class="view-mode" wx:if="{{!editing}}">
-      <view class="card-header">
-        <text class="card-title">{{event.title}}</text>
-        <view class="time-badge" wx:if="{{event.time}}">
-          <text>{{event.time}}{{event.end_time ? ' - ' + event.end_time : ''}}</text>
-        </view>
-      </view>
+  <!-- Swipeable card -->
+  <view
+    class="swipe-content"
+    style="transform: translateX({{swipeX}}rpx);"
+    bindtouchstart="onTouchStart"
+    bindtouchmove="onTouchMove"
+    bindtouchend="onTouchEnd"
+  >
+    <view class="event-card {{editing ? 'editing' : ''}} {{event.time_uncertain ? 'uncertain' : ''}}" bindtap="toggleEdit">
+      <!-- Left color bar -->
+      <view class="color-bar bar-{{event.category}}"></view>
 
-      <text class="card-notes" wx:if="{{event.notes}}">{{event.notes}}</text>
-
-      <view class="card-location" wx:if="{{event.location}}">
-        <text class="location-text">📍 {{event.location}}</text>
-      </view>
-
-      <!-- Prep items checklist -->
-      <view class="prep-list" wx:if="{{event.prep_items.length > 0}}">
-        <view
-          class="prep-item"
-          wx:for="{{event.prep_items}}"
-          wx:key="*this"
-          catchtap="togglePrepItem"
-          data-index="{{index}}"
-        >
-          <view class="checkbox {{checkedItems[index] ? 'checked' : ''}}">
-            <text wx:if="{{checkedItems[index]}}">✓</text>
+      <view class="card-body">
+        <!-- View mode -->
+        <view class="view-mode" wx:if="{{!editing}}">
+          <!-- Row 1: Title + Time badge -->
+          <view class="card-header">
+            <text class="card-title">{{event.title}}</text>
+            <view class="time-badge" wx:if="{{event.time}}">
+              <text>{{event.time}}{{event.end_time ? '-' + event.end_time : ''}}</text>
+            </view>
           </view>
-          <text class="prep-text {{checkedItems[index] ? 'prep-done' : ''}}">{{item}}</text>
-        </view>
-      </view>
 
-      <!-- Time uncertain warning -->
-      <view class="uncertain-warn" wx:if="{{event.time_uncertain}}">
-        <text>⚠️ 此日期由相对时间推算，请确认</text>
-      </view>
+          <!-- Row 2: Date -->
+          <text class="card-date">{{dateLabel}}</text>
 
-      <!-- Category tag -->
-      <view class="tag-row">
-        <view class="category-tag tag-{{event.category}}">
-          <text>{{categoryLabel}}</text>
-        </view>
-      </view>
-    </view>
+          <!-- Row 3: Location -->
+          <text class="card-location" wx:if="{{event.location}}">📍 {{event.location}}</text>
 
-    <!-- Edit mode -->
-    <view class="edit-mode" wx:if="{{editing}}" catchtap="stopPropagation">
-      <view class="edit-field">
-        <text class="edit-label">标题</text>
-        <input class="edit-input" value="{{editData.title}}" bindinput="onEditTitle" />
-      </view>
+          <!-- Row 4: Notes -->
+          <view class="notes-section" wx:if="{{noteLines.length > 0}}">
+            <text class="notes-title">备注</text>
+            <view class="notes-list">
+              <text class="note-line" wx:for="{{noteLines}}" wx:key="*this">{{item}}</text>
+            </view>
+          </view>
 
-      <view class="edit-row">
-        <view class="edit-field half">
-          <text class="edit-label">日期</text>
-          <picker mode="date" value="{{editData.date}}" bindchange="onEditDate">
-            <view class="edit-picker">{{editData.date}}</view>
-          </picker>
-        </view>
-        <view class="edit-field half">
-          <text class="edit-label">时间</text>
-          <picker mode="time" value="{{editData.time || ''}}" bindchange="onEditTime">
-            <view class="edit-picker">{{editData.time || '未设置'}}</view>
-          </picker>
-        </view>
-      </view>
+          <!-- Row 5: Prep items checklist -->
+          <view class="prep-list" wx:if="{{event.prep_items.length > 0}}">
+            <view
+              class="prep-item"
+              wx:for="{{event.prep_items}}"
+              wx:key="*this"
+              catchtap="togglePrepItem"
+              data-index="{{index}}"
+            >
+              <view class="checkbox {{checkedItems[index] ? 'checked' : ''}}">
+                <text class="checkbox-icon" wx:if="{{checkedItems[index]}}">✓</text>
+              </view>
+              <text class="prep-text {{checkedItems[index] ? 'prep-done' : ''}}">{{item}}</text>
+            </view>
+          </view>
 
-      <view class="edit-field">
-        <text class="edit-label">地点</text>
-        <input class="edit-input" value="{{editData.location || ''}}" bindinput="onEditLocation" placeholder="选填" placeholder-style="color: #B5B5B5;" />
-      </view>
+          <!-- Row 6: Time uncertain warning -->
+          <view class="uncertain-warn" wx:if="{{event.time_uncertain}}">
+            <text>⚠️ 此日期由相对时间推算，请确认</text>
+          </view>
 
-      <view class="edit-field">
-        <text class="edit-label">备注</text>
-        <textarea class="edit-textarea" value="{{editData.notes || ''}}" bindinput="onEditNotes" placeholder="选填" placeholder-style="color: #B5B5B5;" auto-height />
-      </view>
-
-      <view class="edit-field">
-        <text class="edit-label">分类</text>
-        <view class="category-picker">
-          <view
-            wx:for="{{categories}}"
-            wx:key="value"
-            class="cat-option tag-{{item.value}} {{editData.category === item.value ? 'cat-active' : ''}}"
-            catchtap="onEditCategory"
-            data-value="{{item.value}}"
-          >
-            <text>{{item.label}}</text>
+          <!-- Row 7: Category tag + Copy button -->
+          <view class="tag-row">
+            <view class="category-tag tag-{{event.category}}">
+              <text>{{categoryLabel}}</text>
+            </view>
+            <text class="copy-btn" catchtap="copyEvent">复制</text>
           </view>
         </view>
-      </view>
 
-      <view class="edit-actions">
-        <view class="btn-cancel" catchtap="cancelEdit">
-          <text>取消</text>
-        </view>
-        <view class="btn-delete" catchtap="deleteEvent">
-          <text>删除</text>
-        </view>
-        <view class="btn-save" catchtap="saveEdit">
-          <text>保存</text>
+        <!-- Edit mode -->
+        <view class="edit-mode" wx:if="{{editing}}" catchtap="stopPropagation">
+          <view class="edit-field">
+            <text class="edit-label">标题</text>
+            <input class="edit-input" value="{{editData.title}}" bindinput="onEditTitle" />
+          </view>
+
+          <view class="edit-row">
+            <view class="edit-field half">
+              <text class="edit-label">日期</text>
+              <picker mode="date" value="{{editData.date}}" bindchange="onEditDate">
+                <view class="edit-picker">{{editData.date}}</view>
+              </picker>
+            </view>
+            <view class="edit-field half">
+              <text class="edit-label">时间</text>
+              <picker mode="time" value="{{editData.time || ''}}" bindchange="onEditTime">
+                <view class="edit-picker">{{editData.time || '未设置'}}</view>
+              </picker>
+            </view>
+          </view>
+
+          <view class="edit-field">
+            <text class="edit-label">地点</text>
+            <input class="edit-input" value="{{editData.location || ''}}" bindinput="onEditLocation" placeholder="选填" placeholder-style="color: #B5B5B5;" />
+          </view>
+
+          <view class="edit-field">
+            <text class="edit-label">备注</text>
+            <textarea class="edit-textarea" value="{{editData.notes || ''}}" bindinput="onEditNotes" placeholder="选填" placeholder-style="color: #B5B5B5;" auto-height />
+          </view>
+
+          <view class="edit-field">
+            <text class="edit-label">分类</text>
+            <view class="category-picker">
+              <view
+                wx:for="{{categories}}"
+                wx:key="value"
+                class="cat-option tag-{{item.value}} {{editData.category === item.value ? 'cat-active' : ''}}"
+                catchtap="onEditCategory"
+                data-value="{{item.value}}"
+              >
+                <text>{{item.label}}</text>
+              </view>
+            </view>
+          </view>
+
+          <view class="edit-actions">
+            <view class="btn-cancel" catchtap="cancelEdit">
+              <text>取消</text>
+            </view>
+            <view class="btn-delete" catchtap="deleteEvent">
+              <text>删除</text>
+            </view>
+            <view class="btn-save" catchtap="saveEdit">
+              <text>保存</text>
+            </view>
+          </view>
         </view>
       </view>
     </view>

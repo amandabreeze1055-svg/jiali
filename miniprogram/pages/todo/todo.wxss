@@ -15,8 +15,7 @@
 .nav-content {
   display: flex;
   align-items: center;
-  padding: 16rpx 40rpx;
-  height: 88rpx;
+  padding: 0 40rpx;
 }
 
 .page-title {

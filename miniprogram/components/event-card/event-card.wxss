@@ -1,10 +1,42 @@
+/* Swipe container */
+.swipe-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.swipe-content {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.2s ease;
+}
+
+.swipe-action {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 160rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #E8856C;
+  border-radius: 0 24rpx 24rpx 0;
+}
+
+.swipe-action-text {
+  color: #FFFFFF;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
 .event-card {
   background: #FFFFFF;
   border-radius: 24rpx;
   border: 1rpx solid #F0EFED;
   display: flex;
   overflow: hidden;
-  margin-bottom: 16rpx;
   transition: all 0.2s;
 }
 
@@ -17,35 +49,26 @@
   border-color: #F0DDB8;
 }
 
+/* Left color bar */
 .color-bar {
   width: 8rpx;
   border-radius: 8rpx 0 0 8rpx;
   flex-shrink: 0;
 }
 
-.bar-school {
-  background: #4A90D9;
-}
+.bar-school { background: #4A90D9; }
+.bar-training { background: #5BB784; }
+.bar-medical { background: #E8856C; }
+.bar-family { background: #E8B44C; }
 
-.bar-training {
-  background: #5BB784;
-}
-
-.bar-medical {
-  background: #E8856C;
-}
-
-.bar-family {
-  background: #E8B44C;
-}
-
+/* Card body */
 .card-body {
   flex: 1;
-  padding: 24rpx 28rpx;
+  padding: 28rpx 32rpx;
   min-width: 0;
 }
 
-/* View Mode */
+/* Row 1: Title + Time */
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -59,6 +82,9 @@
   color: #1A1A1A;
   flex: 1;
   margin-right: 16rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .time-badge {
@@ -66,34 +92,59 @@
   border-radius: 12rpx;
   padding: 4rpx 16rpx;
   flex-shrink: 0;
-}
-
-.time-badge text {
   font-size: 24rpx;
   color: #8C8C8C;
   font-weight: 500;
+  white-space: nowrap;
 }
 
-.card-notes {
+/* Row 2: Date */
+.card-date {
   font-size: 26rpx;
   color: #8C8C8C;
   display: block;
-  margin-bottom: 12rpx;
-  line-height: 1.5;
+  margin-bottom: 8rpx;
 }
 
+/* Row 3: Location */
 .card-location {
-  margin-bottom: 12rpx;
-}
-
-.location-text {
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: #8C8C8C;
+  display: block;
+  margin-bottom: 16rpx;
 }
 
-/* Prep items */
+/* Row 4: Notes section */
+.notes-section {
+  margin-bottom: 16rpx;
+  padding-top: 8rpx;
+  border-top: 1rpx solid #F5F5F3;
+}
+
+.notes-title {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #1A1A1A;
+  display: block;
+  margin-bottom: 8rpx;
+  margin-top: 8rpx;
+}
+
+.notes-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.note-line {
+  font-size: 26rpx;
+  color: #1A1A1A;
+  line-height: 1.6;
+  display: block;
+}
+
+/* Row 5: Prep items */
 .prep-list {
-  background: #FAFAF8;
+  background: #F5F5F3;
   border-radius: 16rpx;
   padding: 16rpx 20rpx;
   margin-bottom: 12rpx;
@@ -113,7 +164,7 @@
   width: 36rpx;
   height: 36rpx;
   border-radius: 8rpx;
-  border: 1rpx solid #F0EFED;
+  border: 2rpx solid #E0E0E0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -126,7 +177,7 @@
   border-color: #5BB784;
 }
 
-.checkbox text {
+.checkbox-icon {
   font-size: 22rpx;
   color: #FFFFFF;
 }
@@ -141,64 +192,63 @@
   color: #B5B5B5;
 }
 
-/* Uncertain warning */
+/* Row 6: Warning */
 .uncertain-warn {
   background: #FFF8EC;
   border: 1rpx solid #F0DDB8;
   border-radius: 12rpx;
   padding: 12rpx 16rpx;
   margin-bottom: 12rpx;
-}
-
-.uncertain-warn text {
   font-size: 24rpx;
   color: #A07830;
 }
 
-/* Category tags */
+/* Row 7: Category tags */
 .tag-row {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.copy-btn {
+  font-size: 22rpx;
+  color: #8C8C8C;
+  margin-left: auto;
+  padding: 4rpx 16rpx;
+  border: 1rpx solid #E0E0E0;
+  border-radius: 12rpx;
+  background: #FAFAF8;
+}
+
+.copy-btn:active {
+  background: #F0EFED;
 }
 
 .category-tag {
   border-radius: 12rpx;
   padding: 4rpx 16rpx;
-}
-
-.category-tag text {
   font-size: 22rpx;
   font-weight: 600;
+  margin-right: 8rpx;
 }
 
 .tag-school {
   background: rgba(74, 144, 217, 0.1);
-}
-
-.tag-school text {
   color: #4A90D9;
 }
 
 .tag-training {
   background: rgba(91, 183, 132, 0.1);
-}
-
-.tag-training text {
   color: #5BB784;
 }
 
 .tag-medical {
   background: rgba(232, 133, 108, 0.1);
-}
-
-.tag-medical text {
   color: #E8856C;
 }
 
 .tag-family {
   background: rgba(232, 180, 76, 0.1);
-}
-
-.tag-family text {
   color: #E8B44C;
 }
 
@@ -294,27 +344,18 @@
 
 .btn-cancel {
   background: #F5F5F3;
-}
-
-.btn-cancel text {
   color: #8C8C8C;
   font-size: 26rpx;
 }
 
 .btn-delete {
   background: rgba(232, 133, 108, 0.1);
-}
-
-.btn-delete text {
   color: #E8856C;
   font-size: 26rpx;
 }
 
 .btn-save {
   background: #1A1A1A;
-}
-
-.btn-save text {
   color: #FFFFFF;
   font-size: 26rpx;
 }

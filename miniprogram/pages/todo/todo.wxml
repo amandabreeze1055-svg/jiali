@@ -1,6 +1,6 @@
 <view class="page">
   <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
-    <view class="nav-content">
+    <view class="nav-content" style="height: {{menuBtnHeight}}px; margin-top: {{menuBtnMarginTop}}px;">
       <text class="page-title">待办事项</text>
     </view>
   </view>

@@ -1,4 +1,4 @@
-const storage = require('../../utils/storage')
+const storage = require('../../utils/storage.js')
 
 Page({
   data: {
@@ -13,11 +13,13 @@ Page({
   },
 
   onLoad() {
-    const sysInfo = wx.getSystemInfoSync()
-    const statusBarHeight = sysInfo.statusBarHeight
+    const rect = wx.getMenuButtonBoundingClientRect()
+    const { statusBarHeight } = wx.getWindowInfo()
     this.setData({
       statusBarHeight,
-      navHeight: statusBarHeight + 44
+      menuBtnHeight: rect.height,
+      menuBtnMarginTop: rect.top - statusBarHeight,
+      navHeight: rect.bottom + 8
     })
   },
 

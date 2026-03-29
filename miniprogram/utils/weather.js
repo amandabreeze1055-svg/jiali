@@ -1,4 +1,4 @@
-const storage = require('./storage')
+const storage = require('./storage.js')
 
 const WEATHER_ICONS = {
   '晴': '☀️',

@@ -6,8 +6,7 @@ App({
     }
     try {
       wx.cloud.init({
-        env: 'cloud1-9gdmb9nmfa3f1652',
-        traceUser: true
+        env: 'cloud1-9gdmb9nmfa3f1652'
       })
     } catch (err) {
       console.warn('云开发初始化失败：', err)

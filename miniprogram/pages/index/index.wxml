@@ -1,15 +1,10 @@
 <view class="page">
   <!-- Custom navigation bar -->
   <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
-    <view class="nav-content">
+    <view class="nav-content" style="height: {{menuBtnHeight}}px; margin-top: {{menuBtnMarginTop}}px;">
       <view class="nav-left">
         <text class="brand-name">家历</text>
         <text class="nav-date">{{currentYearMonth}}</text>
-      </view>
-      <view class="nav-right">
-        <view class="search-btn" bindtap="onSearch">
-          <text>🔍</text>
-        </view>
       </view>
     </view>
   </view>
@@ -80,15 +75,23 @@
     <view style="height: 200rpx;"></view>
   </scroll-view>
 
-  <!-- FAB button -->
-  <view class="fab" bindtap="showModal">
+  <!-- FAB button (draggable) -->
+  <view
+    class="fab"
+    style="left:{{fabX}}px;top:{{fabY}}px;"
+    catchtouchstart="onFabTouchStart"
+    catchtouchmove="onFabTouchMove"
+    catchtouchend="onFabTouchEnd"
+  >
     <text class="fab-icon">📋</text>
   </view>
 
   <!-- Paste modal -->
   <paste-modal
+    wx:if="{{modalVisible}}"
     visible="{{modalVisible}}"
     bind:close="hideModal"
     bind:addevents="onAddEvents"
+    bind:actiondone="onActionDone"
   />
 </view>
