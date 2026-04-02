@@ -2,6 +2,7 @@ const EVENTS_KEY = 'jl_events'
 const SCHEDULES_KEY = 'jl_schedules'
 const WEATHER_KEY = 'jl_weather_cache'
 const CITY_KEY = 'jl_city'
+const NOTES_KEY = 'jl_notes'
 
 module.exports = {
   getEvents() {
@@ -51,10 +52,40 @@ module.exports = {
   setCity(city) {
     wx.setStorageSync(CITY_KEY, city)
   },
+  getNotes() {
+    return wx.getStorageSync(NOTES_KEY) || []
+  },
+  setNotes(notes) {
+    wx.setStorageSync(NOTES_KEY, notes)
+  },
+  addNote(content) {
+    const notes = this.getNotes()
+    notes.unshift({
+      id: 'note_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+      content,
+      createdAt: Date.now(),
+      completed: false
+    })
+    this.setNotes(notes)
+    return notes
+  },
+  deleteNote(id) {
+    const notes = this.getNotes().filter(n => n.id !== id)
+    this.setNotes(notes)
+    return notes
+  },
+  completeNote(id) {
+    const notes = this.getNotes()
+    const idx = notes.findIndex(n => n.id === id)
+    if (idx >= 0) notes[idx].completed = true
+    this.setNotes(notes)
+    return notes
+  },
   clearAll() {
     wx.removeStorageSync(EVENTS_KEY)
     wx.removeStorageSync(SCHEDULES_KEY)
     wx.removeStorageSync(WEATHER_KEY)
+    wx.removeStorageSync(NOTES_KEY)
   },
   generateId() {
     return 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4)

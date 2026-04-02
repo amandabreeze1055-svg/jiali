@@ -3,7 +3,7 @@
   <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
     <view class="nav-content" style="height: {{menuBtnHeight}}px; margin-top: {{menuBtnMarginTop}}px;">
       <view class="nav-left">
-        <text class="brand-name">家历</text>
+        <text class="brand-name">家事有序</text>
         <text class="nav-date">{{currentYearMonth}}</text>
       </view>
     </view>
@@ -20,6 +20,9 @@
       selectedDate="{{selectedDate}}"
       bind:dayselect="onDaySelect"
     />
+
+    <!-- Weekly prep -->
+    <weekly-prep id="weeklyPrep" />
 
     <!-- Upcoming events -->
     <view class="events-section">
@@ -93,5 +96,7 @@
     bind:close="hideModal"
     bind:addevents="onAddEvents"
     bind:actiondone="onActionDone"
+    bind:weeklyprep="onWeeklyPrep"
+    bind:clearprep="onClearPrep"
   />
 </view>

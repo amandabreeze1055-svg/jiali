@@ -1,0 +1,89 @@
+<view class="weekly-prep-container" wx:if="{{hasData}}">
+  <!-- Section title -->
+  <view class="section-header">
+    <text class="section-title">本周准备</text>
+    <view class="add-child-btn" bindtap="addChild">
+      <text>+ 添加</text>
+    </view>
+  </view>
+
+  <!-- Child cards -->
+  <view
+    class="schedule-banner"
+    wx:for="{{children}}"
+    wx:key="_id"
+    wx:for-index="childIdx"
+    wx:for-item="child"
+  >
+    <!-- Card header -->
+    <view class="schedule-banner-head">
+      <view>
+        <view class="schedule-banner-title">
+          <text>{{child.childName}}</text>
+          <text class="class-name" wx:if="{{child.className}}"> · {{child.className}}</text>
+        </view>
+        <view class="schedule-banner-sub">{{child.dateRange}}</view>
+      </view>
+      <view class="head-actions">
+        <view class="schedule-banner-tag" wx:if="{{!child.editingThis}}" bindtap="startEdit" data-child-idx="{{childIdx}}">编辑</view>
+        <view class="delete-tag" wx:if="{{!child.editingThis}}" bindtap="deleteChild" data-child-idx="{{childIdx}}">删除</view>
+      </view>
+    </view>
+
+    <!-- View mode -->
+    <view class="schedule-days" wx:if="{{!child.editingThis}}">
+      <view
+        class="sched-day {{day.isToday ? 'today' : ''}} {{day.hasPrep && !day.isToday ? 'has-prep' : ''}}"
+        wx:for="{{child.days}}"
+        wx:for-item="day"
+        wx:key="weekday"
+      >
+        <view class="sched-day-label">{{day.label}}</view>
+        <view class="sched-day-date">{{day.dateNum}}</view>
+        <view class="sched-day-prep" wx:if="{{day.prepText}}">{{day.prepText}}</view>
+      </view>
+    </view>
+
+    <!-- Edit mode -->
+    <view class="schedule-days" wx:if="{{child.editingThis}}">
+      <view
+        class="sched-day {{child.days[dayIdx].isToday ? 'today' : ''}}"
+        wx:for="{{child.editDays}}"
+        wx:for-item="ed"
+        wx:for-index="dayIdx"
+        wx:key="dayIdx"
+      >
+        <view class="sched-day-label">{{child.days[dayIdx].label}}</view>
+        <view class="sched-day-date">{{child.days[dayIdx].dateNum}}</view>
+        <input
+          class="edit-input"
+          value="{{ed.outfit}}"
+          placeholder="穿搭"
+          placeholder-style="color:#CCC;font-size:20rpx;"
+          bindinput="onOutfitInput"
+          data-child-idx="{{childIdx}}"
+          data-day-idx="{{dayIdx}}"
+        />
+        <input
+          class="edit-input"
+          value="{{ed.itemsText}}"
+          placeholder="物品"
+          placeholder-style="color:#CCC;font-size:20rpx;"
+          bindinput="onItemsInput"
+          data-child-idx="{{childIdx}}"
+          data-day-idx="{{dayIdx}}"
+        />
+      </view>
+    </view>
+
+    <!-- Edit actions -->
+    <view class="edit-actions" wx:if="{{child.editingThis}}">
+      <view class="btn-cancel" bindtap="cancelEdit" data-child-idx="{{childIdx}}">
+        <text>取消</text>
+      </view>
+      <view class="btn-save" bindtap="saveEdit" data-child-idx="{{childIdx}}">
+        <text>保存</text>
+      </view>
+    </view>
+  </view>
+</view>

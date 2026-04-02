@@ -156,6 +156,23 @@ Page({
     this.loadEvents()
   },
 
+  onWeeklyPrep(e) {
+    const weeklyPrep = this.selectComponent('#weeklyPrep')
+    if (weeklyPrep) {
+      const prepData = e.detail.prepData
+      // Ensure array format
+      const prepArray = Array.isArray(prepData) ? prepData : [prepData]
+      weeklyPrep.updateFromAI(prepArray)
+    }
+  },
+
+  onClearPrep() {
+    const weeklyPrep = this.selectComponent('#weeklyPrep')
+    if (weeklyPrep) {
+      weeklyPrep.clearData()
+    }
+  },
+
   onEventDelete(e) {
     storage.deleteEvent(e.detail.id)
     this.loadEvents()

@@ -131,19 +131,63 @@ Component({
         const action = data.action || 'add'
 
         if (action === 'add') {
-          // Original add flow
           const events = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : [])
-          this.setData({
-            loading: false,
-            showResult: true,
-            parseResult: {
-              type: 'text',
-              events,
-              schedules: [],
-              info_notes: [],
-              summary: `提取了 ${events.length} 条事项`
+          // Normalize weekly_prep: support both array and object formats
+          let prepArray = null
+          if (data.weekly_prep) {
+            if (Array.isArray(data.weekly_prep)) {
+              prepArray = data.weekly_prep
+            } else if (data.weekly_prep.days) {
+              prepArray = [data.weekly_prep]
             }
-          })
+          }
+          const hasWeeklyPrep = prepArray && prepArray.length > 0
+
+          if (events.length > 0) {
+            this.setData({
+              loading: false,
+              showResult: true,
+              parseResult: {
+                type: 'text',
+                events,
+                schedules: [],
+                info_notes: [],
+                summary: `提取了 ${events.length} 条事项`
+              }
+            })
+          } else {
+            this.setData({ loading: false })
+          }
+
+          // Handle weekly_prep if present
+          if (hasWeeklyPrep) {
+            const weekLabels = ['', '周一', '周二', '周三', '周四', '周五', '周六', '周日']
+            const desc = prepArray.map(child => {
+              const name = child.childName || '未指定'
+              const dayDescs = child.days.map(d => {
+                const parts = []
+                if (d.outfit) parts.push(d.outfit)
+                if (d.items && d.items.length) parts.push(d.items.join('、'))
+                return `${weekLabels[d.weekday]}：${parts.join('，')}`
+              }).join('\n')
+              return `【${name}】\n${dayDescs}`
+            }).join('\n\n')
+
+            wx.showModal({
+              title: '识别到本周准备',
+              content: desc,
+              success: (res) => {
+                if (res.confirm) {
+                  this.triggerEvent('weeklyprep', { prepData: prepArray })
+                  if (events.length === 0) {
+                    this.triggerEvent('close')
+                  }
+                }
+              }
+            })
+          } else if (events.length === 0) {
+            wx.showToast({ title: '未识别到事项', icon: 'none' })
+          }
         } else if (action === 'delete') {
           const matched = this._matchEvents(data.match || {})
           this.setData({
@@ -171,6 +215,25 @@ Component({
             pendingChanges: changes,
             pendingMatch: data.match
           })
+        } else if (action === 'clear_prep') {
+          this.setData({ loading: false })
+          wx.showModal({
+            title: '确认清除',
+            content: '确定要清除本周准备数据吗？',
+            success: (res) => {
+              if (res.confirm) {
+                this.triggerEvent('clearprep')
+                this.triggerEvent('close')
+              }
+            }
+          })
+        } else if (action === 'note') {
+          this.setData({ loading: false })
+          const content = data.content || this.data.pasteText
+          storage.addNote(content)
+          wx.showToast({ title: '已保存到便签', icon: 'success' })
+          this.setData({ pasteText: '' })
+          this.triggerEvent('close')
         }
       }).catch(err => {
         wx.showToast({ title: '网络错误，请重试', icon: 'none' })
