@@ -1,5 +1,19 @@
 const dateUtil = require('../../utils/date.js')
 
+const OUTFIT_EMOJIS = {
+  '制服': '👔',
+  '校服': '👔',
+  '运动服': '🏃',
+  '便装': '👕',
+  '跆拳道服': '🥋',
+  '柔道服': '🥋'
+}
+
+function getOutfitEmoji(outfit) {
+  if (!outfit) return ''
+  return OUTFIT_EMOJIS[outfit] || '👗'
+}
+
 function getMonday(date) {
   const d = new Date(date)
   const day = d.getDay()
@@ -14,13 +28,6 @@ function buildDayDates(mondayStr) {
     days.push(dateUtil.addDays(mondayStr, i))
   }
   return days
-}
-
-function buildPrepText(day) {
-  const parts = []
-  if (day.outfit) parts.push(day.outfit)
-  if (day.items && day.items.length) parts.push(...day.items)
-  return parts.join('·')
 }
 
 function buildDateRange(mondayStr) {
@@ -42,7 +49,7 @@ function enrichDays(rawDays, mondayStr, today) {
       date: dateStr,
       dateNum: dd.getDate(),
       label: dateUtil.WEEKDAYS[dd.getDay()],
-      prepText: buildPrepText(raw),
+      outfitEmoji: getOutfitEmoji(raw.outfit),
       hasPrep: !!(raw.outfit || (raw.items && raw.items.length)),
       isToday: dateStr === today
     })

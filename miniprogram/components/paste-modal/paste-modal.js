@@ -1,5 +1,6 @@
 const dateUtil = require('../../utils/date.js')
 const storage = require('../../utils/storage.js')
+const config = require('../../utils/config.js')
 
 const CHANGE_LABELS = {
   time: '开始时间',
@@ -35,6 +36,10 @@ Component({
     changesList: [],
     pendingChanges: null,
     pendingMatch: null,
+    dragOffset: 0,
+    dragging: false,
+    _dragStartY: 0,
+    photoLocked: !config.FEATURES.PHOTO_PARSE,
     pastePlaceholder: '粘贴微信聊天记录、学校通知等文字内容...\n\n也可以输入指令，如：\n· 把柔道课全部删掉\n· 篮球课改到每周六下午3点'
   },
 
@@ -45,6 +50,29 @@ Component({
     },
 
     stopPropagation() {},
+
+    onModalTouchStart(e) {
+      this.setData({ _dragStartY: e.touches[0].clientY, dragging: true })
+    },
+
+    onModalTouchMove(e) {
+      const dy = e.touches[0].clientY - this.data._dragStartY
+      if (dy > 0) {
+        this.setData({ dragOffset: dy })
+      }
+    },
+
+    onModalTouchEnd() {
+      if (this.data.dragOffset > 80) {
+        this.setData({ dragging: false, dragOffset: 500 })
+        setTimeout(() => {
+          this.setData({ dragOffset: 0 })
+          this.onClose()
+        }, 300)
+      } else {
+        this.setData({ dragging: false, dragOffset: 0 })
+      }
+    },
 
     resetState() {
       this.setData({
@@ -284,19 +312,55 @@ Component({
             const result = res.result
             if (result.success) {
               const data = result.data
-              const totalEvents = (data.events || []).length
-              const totalSchedules = (data.schedules || []).length
+              const events = data.events || []
+              const totalEvents = events.length
+
+              // Extract weekly_prep
+              let prepArray = null
+              if (data.weekly_prep) {
+                prepArray = Array.isArray(data.weekly_prep) ? data.weekly_prep
+                  : data.weekly_prep.days ? [data.weekly_prep] : null
+              }
+              const hasWeeklyPrep = prepArray && prepArray.length > 0
+
               this.setData({
                 loading: false,
-                showResult: true,
-                parseResult: {
+                showResult: totalEvents > 0,
+                parseResult: totalEvents > 0 ? {
                   type: 'photo',
-                  events: data.events || [],
-                  schedules: data.schedules || [],
+                  events,
+                  schedules: [],
                   info_notes: data.info_notes || [],
-                  summary: `识别到 ${this.data.photos.length} 份文件，提取 ${totalEvents} 条事项${totalSchedules > 0 ? '，' + totalSchedules + ' 份课表' : ''}`
-                }
+                  summary: `识别到 ${this.data.photos.length} 份文件，提取 ${totalEvents} 条事项`
+                } : null
               })
+
+              if (hasWeeklyPrep) {
+                const weekLabels = ['', '周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                const desc = prepArray.map(child => {
+                  const name = child.childName || '未指定'
+                  const dayDescs = child.days.map(d => {
+                    const parts = []
+                    if (d.outfit) parts.push(d.outfit)
+                    if (d.items && d.items.length) parts.push(d.items.join('、'))
+                    return `${weekLabels[d.weekday]}：${parts.join('，')}`
+                  }).join('\n')
+                  return `【${name}】\n${dayDescs}`
+                }).join('\n\n')
+
+                wx.showModal({
+                  title: '识别到本周准备',
+                  content: desc,
+                  success: (res) => {
+                    if (res.confirm) {
+                      this.triggerEvent('weeklyprep', { prepData: prepArray })
+                      if (totalEvents === 0) {
+                        this.triggerEvent('close')
+                      }
+                    }
+                  }
+                })
+              }
             } else {
               wx.showToast({ title: result.error || '解析失败', icon: 'none' })
               this.setData({ loading: false })

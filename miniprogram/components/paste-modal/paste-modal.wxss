@@ -20,12 +20,17 @@
   overflow-y: auto;
 }
 
+.modal-handle-area {
+  padding: 16rpx 0 8rpx;
+  cursor: grab;
+}
+
 .modal-handle {
   width: 72rpx;
   height: 8rpx;
   background: #E0E0E0;
   border-radius: 4rpx;
-  margin: 0 auto 24rpx;
+  margin: 0 auto 16rpx;
 }
 
 .modal-title {
@@ -84,6 +89,57 @@
   color: #1A1A1A;
   line-height: 1.6;
   min-height: 160rpx;
+}
+
+/* Photo locked */
+.photo-locked {
+  border: 2rpx dashed #E0E0E0;
+  border-radius: 20rpx;
+  padding: 48rpx 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.locked-icon {
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+  opacity: 0.5;
+}
+
+.locked-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.locked-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #B5B5B5;
+}
+
+.locked-badge {
+  font-size: 20rpx;
+  font-weight: 600;
+  color: #B5B5B5;
+  background: #F0EFED;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.locked-desc {
+  font-size: 26rpx;
+  color: #B5B5B5;
+  line-height: 1.8;
+}
+
+.locked-note {
+  font-size: 22rpx;
+  color: #CCCCCC;
+  margin-top: 20rpx;
 }
 
 /* Photo area */

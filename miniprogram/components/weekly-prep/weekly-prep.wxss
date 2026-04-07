@@ -1,6 +1,6 @@
 /* Container */
 .weekly-prep-container {
-  padding: 0 32rpx;
+  padding: 0 0;
 }
 
 /* Section header */
@@ -10,7 +10,7 @@
   align-items: center;
   margin-bottom: 16rpx;
   margin-top: 8rpx;
-  padding: 0 4rpx;
+  padding: 0 40rpx;
 }
 
 .section-title {
@@ -28,37 +28,36 @@
   color: #5BB784;
 }
 
-/* Child card */
-.schedule-banner {
-  padding: 28rpx 28rpx;
+/* Card */
+.prep-card {
   background: #FFFFFF;
   border-radius: 28rpx;
-  border: 2rpx solid #F0EFED;
-  box-shadow: 0 2rpx 6rpx rgba(0,0,0,0.04);
-  margin-bottom: 16rpx;
+  border: 1rpx solid #F0EFED;
+  padding: 32rpx;
+  margin: 0 40rpx 20rpx;
 }
 
 /* Card header */
-.schedule-banner-head {
+.prep-card-head {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 20rpx;
+  margin-bottom: 24rpx;
 }
 
-.schedule-banner-title {
-  font-size: 30rpx;
+.prep-title {
+  font-size: 32rpx;
   font-weight: 700;
   color: #1A1A1A;
 }
 
-.class-name {
+.prep-class {
   font-weight: 400;
   color: #8C8C8C;
 }
 
-.schedule-banner-sub {
-  font-size: 22rpx;
+.prep-subtitle {
+  font-size: 24rpx;
   color: #8C8C8C;
   margin-top: 4rpx;
 }
@@ -69,77 +68,181 @@
   flex-shrink: 0;
 }
 
-.schedule-banner-tag {
-  font-size: 22rpx;
+.prep-edit-btn {
+  font-size: 24rpx;
   font-weight: 600;
-  padding: 6rpx 20rpx;
-  border-radius: 12rpx;
-  background: rgba(74,144,217,0.1);
   color: #4A90D9;
+  background: rgba(74,144,217,0.1);
+  padding: 4rpx 20rpx;
+  border-radius: 12rpx;
 }
 
-.delete-tag {
-  font-size: 22rpx;
+.prep-delete-btn {
+  font-size: 24rpx;
   font-weight: 600;
-  padding: 6rpx 20rpx;
-  border-radius: 12rpx;
-  background: rgba(232,133,108,0.1);
   color: #E8856C;
+  background: rgba(232,133,108,0.1);
+  padding: 4rpx 20rpx;
+  border-radius: 12rpx;
 }
 
 /* 7-day grid */
-.schedule-days {
+.prep-days {
   display: flex;
-  gap: 8rpx;
+  gap: 10rpx;
 }
 
-.sched-day {
+/* Each day cell */
+.prep-day {
   flex: 1;
-  padding: 16rpx 4rpx 20rpx;
+  border-radius: 20rpx;
+  border: 3rpx solid #F0EFED;
   background: #FAFAF8;
-  border-radius: 16rpx;
-  border: 2rpx solid #F0EFED;
+  overflow: hidden;
   text-align: center;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Has content — yellow border */
+.prep-day.has-content {
+  border-color: #E8B44C;
+  background: rgba(232,180,76,0.06);
+}
+
+/* Today — coral border */
+.prep-day.is-today {
+  border-color: #E8856C;
+  background: rgba(232,133,108,0.06);
+}
+
+/* Empty day — muted text */
+.prep-day.empty .prep-day-date {
+  color: #B5B5B5;
+}
+
+.prep-day.empty .prep-day-label {
+  color: #B5B5B5;
+}
+
+/* Day header */
+.prep-day-header {
+  padding: 16rpx 8rpx 12rpx;
+}
+
+.prep-day-label {
+  font-size: 22rpx;
+  color: #8C8C8C;
+  font-weight: 600;
+  display: block;
+}
+
+.prep-day.is-today .prep-day-label {
+  color: #E8856C;
+}
+
+.prep-day-date {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1A1A1A;
+  display: block;
+  margin-top: 4rpx;
+}
+
+/* Outfit layer — warm yellow */
+.prep-uniform {
+  background: rgba(232,180,76,0.12);
+  padding: 12rpx 8rpx;
+  border-top: 1rpx solid rgba(232,180,76,0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.sched-day.has-prep {
-  border-color: #E8B44C;
-  background: rgba(232,180,76,0.08);
+.prep-uniform-emoji {
+  font-size: 28rpx;
+  line-height: 1;
 }
 
-.sched-day.today {
-  border-color: #E8856C;
+.prep-uniform-text {
+  font-size: 18rpx;
+  color: #A07830;
+  font-weight: 600;
+  margin-top: 4rpx;
+  word-break: break-all;
+}
+
+/* Today override for outfit */
+.prep-day.is-today .prep-uniform {
+  background: rgba(232,133,108,0.12);
+  border-top-color: rgba(232,133,108,0.2);
+}
+
+.prep-day.is-today .prep-uniform-text {
+  color: #C47060;
+}
+
+/* Items layer — blue */
+.prep-items {
+  background: rgba(74,144,217,0.08);
+  padding: 10rpx 8rpx;
+  border-top: 1rpx solid rgba(74,144,217,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.prep-items-text {
+  font-size: 18rpx;
+  color: #4A90D9;
+  font-weight: 500;
+  line-height: 1.4;
+  word-break: break-all;
+  display: block;
+}
+
+/* Today override for items */
+.prep-day.is-today .prep-items {
   background: rgba(232,133,108,0.08);
+  border-top-color: rgba(232,133,108,0.1);
 }
 
-.sched-day-label {
+.prep-day.is-today .prep-items-text {
+  color: #C47060;
+}
+
+/* Legend */
+.prep-legend {
+  display: flex;
+  gap: 32rpx;
+  margin-top: 20rpx;
+  justify-content: center;
+}
+
+.prep-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.prep-legend-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 4rpx;
+}
+
+.dot-uniform {
+  background: rgba(232,180,76,0.5);
+}
+
+.dot-items {
+  background: rgba(74,144,217,0.4);
+}
+
+.prep-legend-text {
   font-size: 20rpx;
   color: #8C8C8C;
-  font-weight: 600;
-}
-
-.sched-day-date {
-  font-size: 30rpx;
-  font-weight: 700;
-  color: #1A1A1A;
-  margin: 4rpx 0;
-}
-
-.sched-day-prep {
-  font-size: 18rpx;
-  font-weight: 600;
-  color: #E8B44C;
-  margin-top: 8rpx;
-  word-break: break-all;
-  line-height: 1.4;
-}
-
-.sched-day.today .sched-day-prep {
-  color: #E8856C;
 }
 
 /* Edit mode */
@@ -150,7 +253,7 @@
   border: 1rpx solid #F0EFED;
   border-radius: 8rpx;
   padding: 6rpx 4rpx;
-  margin-top: 6rpx;
+  margin: 6rpx auto 0;
   text-align: center;
   background: #FFFFFF;
 }

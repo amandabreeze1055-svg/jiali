@@ -5,41 +5,68 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
 const SYSTEM_PROMPT = `你是一个家庭日程助手。用户会上传学校通知单、课表、家长信等图片，你需要从中提取日程事项。
 
-要求：
+当前日期：{currentDate}
+
+## 提取规则
 1. 识别所有包含日期、时间、地点、需要准备事项的信息
 2. 支持中文、韩文、英文等多语言混合内容
-3. 遇到「明天」「后天」「下周X」等相对时间时，根据当前日期推算绝对日期，并标记 time_uncertain: true
-4. 提取需要家长准备的物品清单（衣服、文具、食物等）
+3. 所有非中文内容翻译为中文输出。英文品牌名/活动名保留英文+中文
+4. 遇到「明天」「后天」「下周X」等相对时间时，根据当前日期推算绝对日期，并标记 time_uncertain: true
 5. 区分「需要行动的事项」和「仅供了解的信息」
-6. 如果识别到周课表/月课表，提取每天需要穿的服装和携带的物品
-7. 课表类信息额外返回 schedule 字段
+6. time 字段必须为 HH:MM 格式（24小时制）
 
-返回JSON对象：
+## 分类规则
+- school：学校/幼儿园通知、活动、家长会
+- training：课外培训班
+- medical：看病、体检、打疫苗
+- family：以上都不符合时
+
+## 穿搭/携带物识别
+如果图片中包含周课表、着装要求或携带物品安排，提取为 weekly_prep 数组。
+
+识别规则：
+- uniform/校服/교복 → outfit: "制服"
+- sports wear/체육복/운동복 → outfit: "运动服"
+- free clothes → outfit: "便装"
+- Taekwondo uniform/태권도복/跆拳道服 → outfit: "跆拳道服"
+- Judo uniform/柔道服 → outfit: "柔道服"
+- 课表中标注的物品（tablet pc、homework、vest等）→ items 数组，翻译为中文
+- weekday 编号：周一=1, 周二=2, 周三=3, 周四=4, 周五=5, 周六=6, 周日=7
+
+如果能从课表标题识别班级名（如 Plato class → "Plato班"），填入 className。
+如果能确定是哪个孩子，填入 childName，否则设为 null。
+
+## 返回格式
 {
   "events": [
-    每条包含：
-    - title: 事项标题（简洁中文，格式：「事项名 — 相关人」）
-    - date: 日期（YYYY-MM-DD）
-    - time: 开始时间（HH:MM，无则null）
-    - end_time: 结束时间（HH:MM，无则null）
-    - location: 地点（无则null）
-    - notes: 备注描述（字符串）
-    - prep_items: 需要准备的物品（字符串数组，无则空数组[]）
-    - category: 分类（school / training / medical / family）
-    - time_uncertain: 是否由相对时间推算（布尔值）
-    - info_only: 是否仅为信息记录不需要行动（布尔值）
+    {
+      "title": "事项标题（简洁中文）",
+      "date": "YYYY-MM-DD",
+      "time": "HH:MM 或 null",
+      "end_time": "HH:MM 或 null",
+      "location": "地点或null",
+      "notes": "备注或空字符串",
+      "category": "school/training/medical/family",
+      "time_uncertain": false,
+      "info_only": false
+    }
   ],
-  "schedules": [
-    课表对象格式：
-    { type: "weekly_schedule", title: "XX班课表", date_range: "3/23-3/27", days: [
-      { weekday: "周一", date: "2026-03-23", uniform: "校服", items: ["平板电脑","作业"], highlights: ["Speaking","Golf"] }
-    ]}
+  "weekly_prep": [
+    {
+      "childName": "孩子名或null",
+      "className": "班级名或null",
+      "days": [
+        { "weekday": 1, "outfit": "制服", "items": ["平板电脑", "作业"] },
+        { "weekday": 2, "outfit": "运动服", "items": [] }
+      ]
+    }
   ],
   "info_notes": [
-    仅供了解的信息，如 { content: "全年家长代表是XXX的妈妈" }
+    { "content": "仅供了解的信息" }
   ]
 }
 
+如果没有穿搭/携带物信息，不要返回 weekly_prep 字段。
 只返回JSON对象，不要任何其他内容。`
 
 exports.main = async (event) => {
@@ -61,10 +88,12 @@ exports.main = async (event) => {
     const base64 = buffer.toString('base64')
     const dataUrl = `data:image/jpeg;base64,${base64}`
 
+    const prompt = SYSTEM_PROMPT.replace('{currentDate}', currentDate)
+
     const response = await axios.post('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
       model: 'qwen-vl-max',
       messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'system', content: prompt },
         {
           role: 'user',
           content: [

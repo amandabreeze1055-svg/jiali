@@ -1,6 +1,8 @@
 <view class="modal-mask" wx:if="{{visible}}" bindtap="onClose">
-  <view class="modal-content" catchtap="stopPropagation">
-    <view class="modal-handle"></view>
+  <view class="modal-content" catchtap="stopPropagation" style="transform: translateY({{dragOffset}}px); transition: {{dragging ? 'none' : 'transform 0.3s'}}">
+    <view class="modal-handle-area" catchtouchstart="onModalTouchStart" catchtouchmove="onModalTouchMove" catchtouchend="onModalTouchEnd">
+      <view class="modal-handle"></view>
+    </view>
     <text class="modal-title">添加日程</text>
     <text class="modal-subtitle">从聊天记录或照片中识别日程</text>
 
@@ -35,8 +37,22 @@
       </view>
     </view>
 
-    <!-- Photo panel -->
-    <view class="panel" wx:if="{{activeTab === 'photo' && !showResult && !showActionConfirm}}">
+    <!-- Photo panel: locked -->
+    <view class="panel" wx:if="{{activeTab === 'photo' && photoLocked && !showResult && !showActionConfirm}}">
+      <view class="photo-locked">
+        <text class="locked-icon">📷</text>
+        <view class="locked-title-row">
+          <text class="locked-title">拍照识别</text>
+          <text class="locked-badge">即将开放</text>
+        </view>
+        <text class="locked-desc">拍照识别课表、通知单等</text>
+        <text class="locked-desc">自动提取日程信息</text>
+        <text class="locked-note">该功能即将在付费版本中开放</text>
+      </view>
+    </view>
+
+    <!-- Photo panel: unlocked -->
+    <view class="panel" wx:if="{{activeTab === 'photo' && !photoLocked && !showResult && !showActionConfirm}}">
       <view class="photo-area" bindtap="choosePhoto">
         <view class="photo-placeholder" wx:if="{{photos.length === 0}}">
           <text class="photo-icon">📷</text>
